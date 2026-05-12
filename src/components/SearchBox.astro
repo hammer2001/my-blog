@@ -1,0 +1,78 @@
+---
+// src/components/SearchBox.astro
+---
+
+<div id="search" class="relative">
+  <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-warm-100 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 focus-within:border-warm-400 transition-colors">
+    <svg class="w-4 h-4 text-warm-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <input
+      id="search-input"
+      type="text"
+      placeholder="搜索文章..."
+      class="bg-transparent border-none outline-none text-sm text-warm-800 dark:text-warm-200 placeholder-warm-400 w-full"
+    />
+  </div>
+  <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 shadow-lg max-h-80 overflow-y-auto z-50">
+  </div>
+</div>
+
+<script>
+  function initSearch() {
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+    if (!input || !results) return;
+
+    let pagefindReady = false;
+    let pending = '';
+
+    input.addEventListener('input', async () => {
+      const term = input.value.trim();
+      if (!term) { results.classList.add('hidden'); results.innerHTML = ''; return; }
+      if (!pagefindReady) { pending = term; return; }
+      doSearch(term);
+    });
+
+    async function doSearch(term: string) {
+      try {
+        const search = await (window as any).pagefind.search(term);
+        if (!search?.results?.length) {
+          results.classList.remove('hidden');
+          results.innerHTML = '<div class="p-4 text-sm text-warm-400 text-center">没有找到相关文章</div>';
+          return;
+        }
+        const html = (await Promise.all(search.results.slice(0, 8).map(async (r: any) => {
+          const data = await r.data();
+          return `<a href="${data.url}" class="block p-3 hover:bg-warm-50 dark:hover:bg-warm-700 border-b border-warm-100 dark:border-warm-700 last:border-0">
+            <div class="text-sm font-medium text-warm-800 dark:text-warm-200">${data.meta?.title || data.url}</div>
+            <div class="text-xs text-warm-400 mt-0.5 truncate">${data.excerpt || ''}</div>
+          </a>`;
+        }))).join('');
+        results.innerHTML = html;
+        results.classList.remove('hidden');
+      } catch {
+        results.classList.add('hidden');
+      }
+    }
+
+    // 等待 Pagefind 加载
+    async function waitPagefind() {
+      while (!(window as any).pagefind) {
+        await new Promise(r => setTimeout(r, 200));
+      }
+      pagefindReady = true;
+      if (pending) { doSearch(pending); pending = ''; }
+    }
+    waitPagefind();
+
+    // 点击外部关闭
+    document.addEventListener('click', (e) => {
+      if (!(e.target as HTMLElement).closest('#search')) {
+        results.classList.add('hidden');
+      }
+    });
+  }
+
+  initSearch();
+</script>

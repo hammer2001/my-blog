@@ -1,6 +1,7 @@
 ---
 // src/components/Nav.astro
 import ThemeToggle from './ThemeToggle.astro';
+import SearchBox from './SearchBox.astro';
 
 const navItems = [
   { label: '首页', href: '/' },
@@ -17,6 +18,8 @@ const navItems = [
     <a href="/" class="text-xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-200 hover:text-warm-600 transition-colors">
       站点标题
     </a>
+
+    <div class="hidden md:block w-48"><SearchBox /></div>
 
     <!-- 桌面端导航 -->
     <ul class="hidden md:flex items-center gap-6">
