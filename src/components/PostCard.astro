@@ -1,0 +1,52 @@
+---
+// src/components/PostCard.astro
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, date, categories, tags, summary, cover } = post.data;
+const href = `/posts/${post.id}/`;
+---
+
+<article class="group bg-white dark:bg-warm-800 rounded-xl shadow-sm hover:shadow-md border border-warm-200 dark:border-warm-700 overflow-hidden transition-all duration-200">
+  {cover && (
+    <a href={href} class="block aspect-[16/9] overflow-hidden">
+      <img src={cover} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+    </a>
+  )}
+  <div class="p-6">
+    <div class="flex items-center gap-3 text-xs text-warm-500 dark:text-warm-400 mb-3">
+      <time datetime={date.toISOString()}>
+        {date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      {categories.length > 0 && (
+        <span class="flex items-center gap-1">
+          <span class="text-warm-300">·</span>
+          {categories.map(cat => (
+            <a href={`/categories/${cat}/`} class="hover:text-warm-600 dark:hover:text-warm-200 transition-colors">
+              {cat}
+            </a>
+          ))}
+        </span>
+      )}
+    </div>
+    <h2 class="text-xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-2 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors">
+      <a href={href}>{title}</a>
+    </h2>
+    {summary && (
+      <p class="text-sm text-warm-500 dark:text-warm-400 leading-relaxed mb-3 line-clamp-2">{summary}</p>
+    )}
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {tags.map(tag => (
+          <a href={`/tags/${tag}/`} class="text-xs px-2 py-0.5 rounded-full bg-warm-100 dark:bg-warm-700 text-warm-600 dark:text-warm-300 hover:bg-warm-200 dark:hover:bg-warm-600 transition-colors">
+            #{tag}
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</article>
