@@ -1,0 +1,32 @@
+---
+// src/pages/about.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="关于" description="关于我和这个网站">
+  <section class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-8">关于</h1>
+
+    <div class="flex flex-col sm:flex-row gap-8 items-start">
+      <!-- 头像占位 -->
+      <div class="w-32 h-32 rounded-full bg-warm-200 dark:bg-warm-700 flex items-center justify-center text-4xl shrink-0">
+        👤
+      </div>
+
+      <div class="space-y-4 text-warm-700 dark:text-warm-300 leading-relaxed">
+        <p>你好，欢迎来到我的个人网站。</p>
+        <p>这里记录我的思考、学习和生活。喜欢阅读、编程和探索新事物。</p>
+
+        <div class="pt-4 space-y-2">
+          <h3 class="font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-200">联系方式</h3>
+          <p>
+            📧 <a href="mailto:your-email@example.com" class="text-warm-600 dark:text-warm-400 hover:underline">your-email@example.com</a>
+          </p>
+          <p>
+            💻 <a href="https://github.com/your-username" target="_blank" class="text-warm-600 dark:text-warm-400 hover:underline">GitHub</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
