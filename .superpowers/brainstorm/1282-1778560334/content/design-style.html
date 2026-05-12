@@ -1,0 +1,55 @@
+<h2>你偏好哪种整体设计风格？</h2>
+<p class="subtitle">这决定了网站的视觉基调、配色方向和排版风格</p>
+
+<div class="cards">
+  <div class="card" data-choice="minimal" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#fafafa;padding:24px;border-radius:4px;font-family:system-ui">
+        <div style="height:8px;width:40px;background:#333;border-radius:2px;margin-bottom:16px"></div>
+        <div style="height:6px;width:80%;background:#e0e0e0;margin-bottom:8px"></div>
+        <div style="height:6px;width:100%;background:#e0e0e0;margin-bottom:8px"></div>
+        <div style="height:6px;width:60%;background:#e0e0e0;margin-bottom:20px"></div>
+        <div style="height:6px;width:90%;background:#f0f0f0;margin-bottom:6px"></div>
+        <div style="height:6px;width:70%;background:#f0f0f0;margin-bottom:6px"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>极简主义</h3>
+      <p>大量留白，克制的配色（黑白灰+单强调色），重点在文字内容。类似 Medium、Notion 风格。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="warm" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:linear-gradient(135deg,#fef9f0,#fdf2e0);padding:24px;border-radius:4px;font-family:system-ui">
+        <div style="height:8px;width:50px;background:#c4754b;border-radius:2px;margin-bottom:16px"></div>
+        <div style="height:6px;width:75%;background:#e8c9a0;margin-bottom:8px"></div>
+        <div style="height:6px;width:100%;background:#e8c9a0;margin-bottom:8px"></div>
+        <div style="height:6px;width:55%;background:#e8c9a0;margin-bottom:16px"></div>
+        <div style="height:40px;width:100%;background:#f5e6d3;border-radius:3px;margin-bottom:8px"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>温暖人文</h3>
+      <p>暖色调（米白/奶油/棕褐），衬线字体，像一本打开的书。适合有温度的个人写作。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="modern" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0f1117;padding:24px;border-radius:4px;font-family:system-ui">
+        <div style="height:8px;width:40px;background:#64ffda;border-radius:2px;margin-bottom:16px"></div>
+        <div style="height:6px;width:80%;background:#374151;margin-bottom:8px"></div>
+        <div style="height:6px;width:100%;background:#374151;margin-bottom:8px"></div>
+        <div style="height:6px;width:50%;background:#374151;margin-bottom:16px"></div>
+        <div style="height:4px;width:95%;background:#1f2937;margin-bottom:5px"></div>
+        <div style="height:4px;width:85%;background:#1f2937;margin-bottom:5px"></div>
+        <div style="height:4px;width:65%;background:#1f2937"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>现代暗色</h3>
+      <p>深色背景，霓虹点缀色，无衬线字体，科技感强。适合偏技术向的个人站点。</p>
+    </div>
+  </div>
+</div>

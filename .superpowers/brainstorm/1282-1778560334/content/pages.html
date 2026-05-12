@@ -1,0 +1,61 @@
+<h2>你的网站需要哪些页面？</h2>
+<p class="subtitle">参考 Baokker's Blog 的结构，勾选你需要的（可多选）</p>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="home" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>首页 — 文章列表</h3>
+      <p>按时间倒序展示文章卡片，包含标题、摘要、日期、封面图、分类标签。支持分页或无限滚动。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="article" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>文章详情页</h3>
+      <p>Markdown 渲染的正文，支持代码高亮、图片/视频嵌入、目录导航（TOC）、版权声明。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="archive" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>归档页</h3>
+      <p>按年份/月份时间线展示所有文章，方便快速浏览历史内容。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="categories" onclick="toggleSelect(this)">
+    <div class="letter">4</div>
+    <div class="content">
+      <h3>分类页</h3>
+      <p>按文章分类聚合展示（如：技术、阅读、生活、旅行等），每个分类下列出该分类下的文章。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="tags" onclick="toggleSelect(this)">
+    <div class="letter">5</div>
+    <div class="content">
+      <h3>标签页</h3>
+      <p>标签云（Tag Cloud）展示，点击标签筛选相关文章。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="about" onclick="toggleSelect(this)">
+    <div class="letter">6</div>
+    <div class="content">
+      <h3>关于页</h3>
+      <p>个人介绍、头像、联系方式（邮箱/社交链接）、RSS 订阅入口。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="projects" onclick="toggleSelect(this)">
+    <div class="letter">7</div>
+    <div class="content">
+      <h3>项目/作品展示页</h3>
+      <p>展示个人项目或作品集，包含项目截图、描述、链接。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="friends" onclick="toggleSelect(this)">
+    <div class="letter">8</div>
+    <div class="content">
+      <h3>友链页</h3>
+      <p>展示友情链接，链接到其他朋友或推荐的博客。</p>
+    </div>
+  </div>
+</div>
