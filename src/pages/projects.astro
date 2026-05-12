@@ -1,0 +1,22 @@
+---
+// src/pages/projects.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="项目" description="项目作品展示">
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-8">项目</h1>
+
+    {projects.length === 0 ? (
+      <p class="text-center text-warm-500 py-20">还没有项目展示。</p>
+    ) : (
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {projects.map(project => <ProjectCard project={project} />)}
+      </div>
+    )}
+  </section>
+</BaseLayout>

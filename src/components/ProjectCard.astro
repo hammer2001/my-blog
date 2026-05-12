@@ -1,0 +1,38 @@
+---
+// src/components/ProjectCard.astro
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { name, description, tags, url, image } = project.data;
+---
+
+<div class="group rounded-xl bg-white dark:bg-warm-800 border border-warm-200 dark:border-warm-700 overflow-hidden hover:shadow-md transition-all">
+  {image ? (
+    <div class="aspect-[16/9] overflow-hidden">
+      <img src={image} alt={name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+    </div>
+  ) : (
+    <div class="aspect-[16/9] bg-gradient-to-br from-warm-200 to-warm-100 dark:from-warm-700 dark:to-warm-800 flex items-center justify-center">
+      <span class="text-4xl">📂</span>
+    </div>
+  )}
+  <div class="p-5">
+    <h3 class="text-lg font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-2">
+      {url ? <a href={url} target="_blank" class="hover:text-warm-600 transition-colors">{name}</a> : name}
+    </h3>
+    <p class="text-sm text-warm-500 dark:text-warm-400 mb-3">{description}</p>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-1.5">
+        {tags.map(tag => (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-warm-100 dark:bg-warm-700 text-warm-600 dark:text-warm-300">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
