@@ -1,0 +1,40 @@
+---
+// src/pages/categories.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = await getCollection('posts');
+
+// 统计每个分类的文章数
+const categoryMap = new Map<string, number>();
+for (const post of posts) {
+  for (const cat of post.data.categories) {
+    categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
+  }
+}
+const categories = [...categoryMap.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="分类" description="文章分类 — 按主题浏览">
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-8">分类</h1>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {categories.map(([name, count]) => (
+        <a
+          href={`/categories/${name}/`}
+          class="group p-6 rounded-xl bg-white dark:bg-warm-800 border border-warm-200 dark:border-warm-700 hover:shadow-md transition-all"
+        >
+          <h2 class="text-lg font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 group-hover:text-warm-600 transition-colors">
+            {name}
+          </h2>
+          <p class="text-sm text-warm-500 mt-1">{count} 篇文章</p>
+        </a>
+      ))}
+    </div>
+
+    {categories.length === 0 && (
+      <p class="text-center text-warm-500 py-20">还没有分类。</p>
+    )}
+  </section>
+</BaseLayout>
