@@ -1,0 +1,44 @@
+---
+// src/pages/archives.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allPosts = await getCollection('posts');
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 按年份分组
+const groupedByYear: Record<number, typeof posts> = {};
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  (groupedByYear[year] ||= []).push(post);
+}
+const years = Object.keys(groupedByYear).map(Number).sort((a, b) => b - a);
+---
+
+<BaseLayout title="归档" description="文章归档 — 按时间线浏览所有文章">
+  <section class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-8">归档</h1>
+
+    {years.map(year => (
+      <section class="mb-10">
+        <h2 class="text-2xl font-bold font-[family-name:var(--font-serif)] text-warm-600 dark:text-warm-300 mb-4">{year}</h2>
+        <ul class="space-y-3">
+          {groupedByYear[year]!.map(post => (
+            <li class="flex items-baseline gap-4 pb-3 border-b border-warm-100 dark:border-warm-800">
+              <time datetime={post.data.date.toISOString()} class="text-sm text-warm-400 dark:text-warm-500 whitespace-nowrap">
+                {post.data.date.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })}
+              </time>
+              <a href={`/posts/${post.id}/`} class="text-warm-800 dark:text-warm-200 hover:text-warm-600 dark:hover:text-warm-300 transition-colors">
+                {post.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    {years.length === 0 && (
+      <p class="text-center text-warm-500 py-20">还没有文章。</p>
+    )}
+  </section>
+</BaseLayout>
