@@ -28,7 +28,7 @@ const years = Object.keys(groupedByYear).map(Number).sort((a, b) => b - a);
               <time datetime={post.data.date.toISOString()} class="text-sm text-warm-400 dark:text-warm-500 whitespace-nowrap">
                 {post.data.date.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })}
               </time>
-              <a href={`/posts/${post.id}/`} class="text-warm-800 dark:text-warm-200 hover:text-warm-600 dark:hover:text-warm-300 transition-colors">
+              <a href={`/posts/${post.id}/`} class="text-warm-800 dark:text-warm-200 hover:text-warm-600 dark:hover:text-warm-300 transition-colors font-[family-name:var(--font-body)]">
                 {post.data.title}
               </a>
             </li>
@@ -38,7 +38,7 @@ const years = Object.keys(groupedByYear).map(Number).sort((a, b) => b - a);
     ))}
 
     {years.length === 0 && (
-      <p class="text-center text-warm-500 py-20">还没有文章。</p>
+      <p class="text-center text-warm-500 py-20 font-[family-name:var(--font-body)]">还没有文章。</p>
     )}
   </section>
 </BaseLayout>
