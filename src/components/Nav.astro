@@ -1,0 +1,63 @@
+---
+// src/components/Nav.astro
+import ThemeToggle from './ThemeToggle.astro';
+
+const navItems = [
+  { label: '首页', href: '/' },
+  { label: '归档', href: '/archives' },
+  { label: '分类', href: '/categories' },
+  { label: '标签', href: '/tags' },
+  { label: '关于', href: '/about' },
+  { label: '项目', href: '/projects' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-warm-50/90 dark:bg-warm-900/90 backdrop-blur-sm border-b border-warm-200 dark:border-warm-700">
+  <nav class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-200 hover:text-warm-600 transition-colors">
+      站点标题
+    </a>
+
+    <!-- 桌面端导航 -->
+    <ul class="hidden md:flex items-center gap-6">
+      {navItems.map(item => (
+        <li>
+          <a
+            href={item.href}
+            class="text-sm text-warm-600 dark:text-warm-400 hover:text-warm-800 dark:hover:text-warm-200 transition-colors"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li><ThemeToggle /></li>
+    </ul>
+
+    <!-- 移动端菜单按钮 -->
+    <button id="mobile-menu-btn" type="button" aria-label="菜单" class="md:hidden p-2">
+      <svg class="w-6 h-6 text-warm-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- 移动端下拉菜单 -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-900">
+    <ul class="flex flex-col px-4 py-3 gap-3">
+      {navItems.map(item => (
+        <li>
+          <a href={item.href} class="block text-sm text-warm-600 dark:text-warm-400 py-1">
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li class="pt-2 border-t border-warm-200 dark:border-warm-700"><ThemeToggle /></li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+  });
+</script>
