@@ -1,0 +1,33 @@
+---
+// src/components/TOC.astro
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter(h => h.depth >= 2 && h.depth <= 3);
+---
+
+{items.length > 0 && (
+  <nav class="hidden lg:block sticky top-24 w-56 shrink-0 self-start ml-4">
+    <h4 class="text-sm font-semibold text-warm-600 dark:text-warm-300 mb-3">目录</h4>
+    <ul class="space-y-1.5 text-sm border-l-2 border-warm-200 dark:border-warm-700">
+      {items.map(heading => (
+        <li class="pl-3" style={`padding-left: ${(heading.depth - 1) * 12}px`}>
+          <a
+            href={`#${heading.slug}`}
+            class="text-warm-500 dark:text-warm-400 hover:text-warm-700 dark:hover:text-warm-200 transition-colors"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
