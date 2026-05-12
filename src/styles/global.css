@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-warm-50: #fef9f0;
+  --color-warm-100: #fdf2e0;
+  --color-warm-200: #f5e6d3;
+  --color-warm-300: #e8c9a0;
+  --color-warm-400: #d4a574;
+  --color-warm-500: #c4754b;
+  --color-warm-600: #a85a3a;
+  --color-warm-700: #8b452d;
+  --color-warm-800: #6d3424;
+  --color-warm-900: #4a2018;
+
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+}
+
+/* 基础样式 */
+html {
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-warm-50 text-warm-900 antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  @apply bg-warm-900 text-warm-100;
+}
+
+/* 文章正文排版 */
+.prose {
+  @apply text-lg leading-relaxed;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-serif);
+  @apply font-bold mt-8 mb-4;
+}
+
+.prose h2 { @apply text-2xl border-b border-warm-200 pb-2; }
+.dark .prose h2 { @apply border-warm-700; }
+
+.prose h3 { @apply text-xl; }
+
+.prose p { @apply mb-4; }
+
+.prose a { @apply text-warm-600 underline underline-offset-2 hover:text-warm-800; }
+.dark .prose a { @apply text-warm-400 hover:text-warm-200; }
+
+.prose img { @apply rounded-lg shadow-md my-6 mx-auto; }
+
+.prose blockquote {
+  @apply border-l-4 border-warm-400 pl-4 my-4 italic text-warm-700;
+}
+.dark .prose blockquote { @apply border-warm-500 text-warm-300; }
+
+.prose code {
+  @apply bg-warm-200 text-warm-800 rounded px-1.5 py-0.5 text-sm font-mono;
+}
+.dark .prose code { @apply bg-warm-800 text-warm-200; }
+
+.prose pre {
+  @apply rounded-lg p-4 overflow-x-auto my-6;
+}
+
+.prose ul, .prose ol { @apply mb-4 pl-6; }
+.prose li { @apply mb-1; }
+
+.prose video { @apply rounded-lg shadow-md my-6 w-full; }
+
+.prose hr { @apply border-warm-200 my-8; }
+.dark .prose hr { @apply border-warm-700; }
+
+/* 选中文字 */
+::selection {
+  @apply bg-warm-300 text-warm-900;
+}
+.dark ::selection {
+  @apply bg-warm-600 text-warm-100;
+}
