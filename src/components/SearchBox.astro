@@ -3,7 +3,7 @@
 ---
 
 <div id="search" class="relative">
-  <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-warm-100 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 focus-within:border-warm-400 transition-colors">
+  <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-warm-100 dark:bg-warm-850 border border-warm-200 dark:border-warm-700 focus-within:border-warm-400 transition-colors">
     <svg class="w-4 h-4 text-warm-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
@@ -14,8 +14,7 @@
       class="bg-transparent border-none outline-none text-sm text-warm-800 dark:text-warm-200 placeholder-warm-400 w-full"
     />
   </div>
-  <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 shadow-lg max-h-80 overflow-y-auto z-50">
-  </div>
+  <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-warm-50 dark:bg-warm-850 rounded-xl border border-warm-200 dark:border-warm-700 shadow-lg max-h-80 overflow-y-auto z-50"></div>
 </div>
 
 <script>
@@ -24,51 +23,58 @@
     const results = document.getElementById('search-results');
     if (!input || !results) return;
 
-    let pagefindReady = false;
-    let pending = '';
+    let posts = [];
+    let loaded = false;
 
-    input.addEventListener('input', async () => {
-      const term = input.value.trim();
+    async function loadPosts() {
+      try {
+        const res = await fetch('/search.json');
+        posts = await res.json();
+        loaded = true;
+      } catch {
+        loaded = true;
+      }
+    }
+    loadPosts();
+
+    input.addEventListener('input', () => {
+      const term = input.value.trim().toLowerCase();
       if (!term) { results.classList.add('hidden'); results.innerHTML = ''; return; }
-      if (!pagefindReady) { pending = term; return; }
-      doSearch(term);
+      if (!loaded) return;
+
+      const matched = posts
+        .filter(p =>
+          p.title.toLowerCase().includes(term) ||
+          p.summary.toLowerCase().includes(term) ||
+          p.categories.some((c) => c.toLowerCase().includes(term)) ||
+          p.tags.some((t) => t.toLowerCase().includes(term))
+        )
+        .slice(0, 8);
+
+      if (!matched.length) {
+        results.classList.remove('hidden');
+        results.innerHTML = '<div class="p-4 text-sm text-warm-400 text-center">没有找到相关文章</div>';
+        return;
+      }
+
+      results.innerHTML = matched.map(p => `
+        <a href="${p.url}" class="block p-3 hover:bg-warm-50 dark:hover:bg-warm-700 border-b border-warm-100 dark:border-warm-700 last:border-0">
+          <div class="text-sm font-medium text-warm-800 dark:text-warm-200">${escapeHtml(p.title)}</div>
+          <div class="text-xs text-warm-400 mt-0.5 truncate">${escapeHtml(p.summary)}</div>
+        </a>
+      `).join('');
+      results.classList.remove('hidden');
     });
 
-    async function doSearch(term: string) {
-      try {
-        const search = await (window as any).pagefind.search(term);
-        if (!search?.results?.length) {
-          results.classList.remove('hidden');
-          results.innerHTML = '<div class="p-4 text-sm text-warm-400 text-center">没有找到相关文章</div>';
-          return;
-        }
-        const html = (await Promise.all(search.results.slice(0, 8).map(async (r: any) => {
-          const data = await r.data();
-          return `<a href="${data.url}" class="block p-3 hover:bg-warm-50 dark:hover:bg-warm-700 border-b border-warm-100 dark:border-warm-700 last:border-0">
-            <div class="text-sm font-medium text-warm-800 dark:text-warm-200">${data.meta?.title || data.url}</div>
-            <div class="text-xs text-warm-400 mt-0.5 truncate">${data.excerpt || ''}</div>
-          </a>`;
-        }))).join('');
-        results.innerHTML = html;
-        results.classList.remove('hidden');
-      } catch {
-        results.classList.add('hidden');
-      }
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
-
-    // 等待 Pagefind 加载
-    async function waitPagefind() {
-      while (!(window as any).pagefind) {
-        await new Promise(r => setTimeout(r, 200));
-      }
-      pagefindReady = true;
-      if (pending) { doSearch(pending); pending = ''; }
-    }
-    waitPagefind();
 
     // 点击外部关闭
     document.addEventListener('click', (e) => {
-      if (!(e.target as HTMLElement).closest('#search')) {
+      if (!e.target || !(e.target as HTMLElement).closest('#search')) {
         results.classList.add('hidden');
       }
     });

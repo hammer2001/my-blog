@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-warm-50: #fef9f0;
   --color-warm-100: #fdf2e0;
@@ -10,10 +12,12 @@
   --color-warm-600: #a85a3a;
   --color-warm-700: #8b452d;
   --color-warm-800: #6d3424;
+  --color-warm-850: #573023;   /* 介于 800-900 之间，深色模式卡片用 */
   --color-warm-900: #4a2018;
 
   --font-serif: 'Noto Serif SC', 'Source Han Serif SC', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  --font-body: 'LXGW WenKai', 'Noto Serif SC', Georgia, serif;
 }
 
 /* 基础样式 */
@@ -22,58 +26,234 @@ html {
   scroll-behavior: smooth;
 }
 
+/* 全局主题过渡：颜色/背景/边框切换丝滑 */
+*,
+*::before,
+*::after {
+  transition: background-color 0.4s ease, color 0.3s ease, border-color 0.35s ease, box-shadow 0.3s ease;
+}
+
 body {
   @apply bg-warm-50 text-warm-900 antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dark body {
-  @apply bg-warm-900 text-warm-100;
+  @apply bg-warm-800 text-warm-50;
 }
 
 /* 文章正文排版 */
 .prose {
-  @apply text-lg leading-relaxed;
+  @apply text-base leading-relaxed text-warm-900;
+  font-family: var(--font-body);
+  word-break: break-word;
 }
 
-.prose h1, .prose h2, .prose h3, .prose h4 {
+.dark .prose {
+  @apply text-warm-50;
+}
+
+/* 标题 */
+.prose h1 {
   font-family: var(--font-serif);
-  @apply font-bold mt-8 mb-4;
+  @apply text-3xl font-bold mt-12 mb-6 text-warm-900 tracking-tight;
+}
+.dark .prose h1 { @apply text-warm-100; }
+
+.prose h2 {
+  font-family: var(--font-serif);
+  @apply text-2xl font-bold mt-12 mb-5 pb-3 text-warm-900 relative;
+  border-bottom: 2px solid var(--color-warm-200);
+}
+.prose h2::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 2px;
+  margin-top: 0.75rem;
+  background: var(--color-warm-400);
+  border-radius: 1px;
+}
+.dark .prose h2 {
+  border-bottom-color: var(--color-warm-600);
+  @apply text-warm-100;
+}
+.dark .prose h2::after {
+  background: var(--color-warm-400);
 }
 
-.prose h2 { @apply text-2xl border-b border-warm-200 pb-2; }
-.dark .prose h2 { @apply border-warm-700; }
+.prose h3 {
+  font-family: var(--font-serif);
+  @apply text-xl font-semibold mt-8 mb-3 text-warm-900 pl-4 relative;
+}
+.prose h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 3px;
+  background: var(--color-warm-400);
+  border-radius: 2px;
+}
+.dark .prose h3 { @apply text-warm-100; }
+.dark .prose h3::before { background: var(--color-warm-500); }
 
-.prose h3 { @apply text-xl; }
+.prose h4 {
+  font-family: var(--font-serif);
+  @apply text-lg font-semibold mt-6 mb-2 text-warm-900;
+}
+.dark .prose h4 { @apply text-warm-100; }
 
-.prose p { @apply mb-4; }
+/* 段落 */
+.prose p {
+  @apply mb-6 leading-relaxed;
+}
 
-.prose a { @apply text-warm-600 underline underline-offset-2 hover:text-warm-800; }
-.dark .prose a { @apply text-warm-400 hover:text-warm-200; }
+/* 加粗 */
+.prose strong {
+  @apply font-semibold text-warm-900;
+}
+.dark .prose strong { @apply text-warm-100; }
 
-.prose img { @apply rounded-lg shadow-md my-6 mx-auto; }
+/* 链接 */
+.prose a {
+  @apply text-warm-600 no-underline font-medium;
+  background-image: linear-gradient(var(--color-warm-400), var(--color-warm-400));
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.2s ease, color 0.2s ease;
+}
+.prose a:hover {
+  background-size: 100% 2px;
+  @apply text-warm-800;
+}
+.dark .prose a {
+  background-image: linear-gradient(var(--color-warm-500), var(--color-warm-500));
+  @apply text-warm-200;
+}
+.dark .prose a:hover { @apply text-warm-50; }
 
+/* 图片 */
+.prose img {
+  @apply rounded-xl shadow-md my-10 mx-auto max-w-full;
+}
+
+/* 引用块 */
 .prose blockquote {
-  @apply border-l-4 border-warm-400 pl-4 my-4 italic text-warm-700;
+  @apply border-l-4 border-warm-400 bg-warm-100/60 rounded-r-xl pl-6 pr-5 py-4 my-8 text-warm-700 leading-relaxed italic;
+  box-shadow: 1px 1px 0 var(--color-warm-200);
 }
-.dark .prose blockquote { @apply border-warm-500 text-warm-300; }
+.dark .prose blockquote { @apply border-warm-400 bg-warm-800/60 text-warm-200; }
 
-.prose code {
-  @apply bg-warm-200 text-warm-800 rounded px-1.5 py-0.5 text-sm font-mono;
+.prose blockquote p {
+  @apply mb-0;
 }
-.dark .prose code { @apply bg-warm-800 text-warm-200; }
 
+/* 行内代码 */
+.prose :not(pre) > code {
+  @apply bg-warm-100 text-warm-700 rounded-md px-1.5 py-0.5 text-sm font-mono border border-warm-200;
+}
+.dark .prose :not(pre) > code { @apply bg-warm-800 text-warm-200 border-warm-700; }
+
+/* 代码块 */
 .prose pre {
-  @apply rounded-lg p-4 overflow-x-auto my-6;
+  @apply rounded-xl p-6 overflow-x-auto my-8 text-sm leading-relaxed;
+  background: var(--color-warm-100) !important;
+  border: 1px solid var(--color-warm-200);
+}
+.dark .prose pre {
+  background: var(--color-warm-800) !important;
+  border-color: var(--color-warm-700);
+  @apply text-warm-200;
+}
+.prose pre code {
+  @apply bg-transparent p-0 text-inherit;
 }
 
-.prose ul, .prose ol { @apply mb-4 pl-6; }
-.prose li { @apply mb-1; }
+/* 无序列表 */
+.prose ul {
+  @apply mb-6 pl-6 list-none;
+}
 
-.prose video { @apply rounded-lg shadow-md my-6 w-full; }
+.prose ul li {
+  @apply mb-2.5 relative pl-5 leading-relaxed;
+}
 
-.prose hr { @apply border-warm-200 my-8; }
-.dark .prose hr { @apply border-warm-700; }
+.prose ul li::before {
+  content: '';
+  @apply absolute left-0 top-[0.65em] w-1.5 h-1.5 rounded-full;
+  background: var(--color-warm-400);
+}
+.dark .prose ul li::before { background: var(--color-warm-500); }
+
+/* 有序列表 */
+.prose ol {
+  @apply mb-6 pl-6 list-decimal;
+}
+
+.prose ol li {
+  @apply mb-2.5 pl-1 leading-relaxed;
+}
+
+.prose ol li::marker {
+  @apply text-warm-400 font-medium;
+}
+.dark .prose ol li::marker { @apply text-warm-500; }
+
+/* 表格 */
+.prose table {
+  @apply w-full my-8 border-collapse text-sm overflow-hidden rounded-xl;
+}
+
+.prose thead {
+  @apply border-b-2 border-warm-300;
+  background: var(--color-warm-100);
+}
+.dark .prose thead {
+  @apply border-warm-600;
+  background: var(--color-warm-800);
+}
+
+.prose th {
+  @apply text-left py-3.5 px-5 font-semibold text-warm-700 text-sm;
+}
+.dark .prose th { @apply text-warm-200; }
+
+.prose td {
+  @apply py-3 px-5 border-b border-warm-100;
+}
+.dark .prose td { @apply border-warm-700; }
+
+.prose tbody tr:hover {
+  background: var(--color-warm-50);
+}
+.dark .prose tbody tr:hover { background: var(--color-warm-850); }
+
+/* 视频 */
+.prose video {
+  @apply rounded-xl shadow-md my-8 w-full;
+}
+
+/* 分割线 */
+.prose hr {
+  @apply border-0 h-px my-12;
+  background: linear-gradient(to right, transparent, var(--color-warm-300), transparent);
+}
+.dark .prose hr {
+  background: linear-gradient(to right, transparent, var(--color-warm-600), transparent);
+}
+
+/* 嵌套列表 */
+.prose li > ul,
+.prose li > ol {
+  @apply mt-2 mb-0;
+}
+
+/* 任务列表（checkbox） */
+.prose input[type="checkbox"] {
+  @apply mr-2 accent-warm-500;
+}
 
 /* 选中文字 */
 ::selection {
@@ -81,4 +261,22 @@ body {
 }
 .dark ::selection {
   @apply bg-warm-600 text-warm-100;
+}
+
+/* 页面渐入动画 */
+@keyframes pageIn {
+  0%   { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-page-in {
+  animation: pageIn 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* 卡片渐入（用于列表页依次入场） */
+@keyframes cardIn {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-card-in {
+  animation: cardIn 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }

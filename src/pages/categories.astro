@@ -23,7 +23,7 @@ const categories = [...categoryMap.entries()].sort((a, b) => b[1] - a[1]);
       {categories.map(([name, count]) => (
         <a
           href={`/categories/${name}/`}
-          class="group p-6 rounded-xl bg-white dark:bg-warm-800 border border-warm-200 dark:border-warm-700 hover:shadow-md transition-all"
+          class="group p-6 rounded-xl bg-warm-50 dark:bg-warm-850 border border-warm-200 dark:border-warm-700 hover:shadow-md transition-all"
         >
           <h2 class="text-lg font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 group-hover:text-warm-600 transition-colors">
             {name}

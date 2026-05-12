@@ -13,54 +13,109 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 bg-warm-50/90 dark:bg-warm-900/90 backdrop-blur-sm border-b border-warm-200 dark:border-warm-700">
+<header class="sticky top-0 z-50 bg-warm-50/90 dark:bg-warm-800/90 backdrop-blur-sm border-b border-warm-200 dark:border-warm-700 animate-nav-slide">
   <nav class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-    <a href="/" class="text-xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-200 hover:text-warm-600 transition-colors">
-      站点标题
+    <a href="/" class="text-xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-200 hover:text-warm-600 transition-colors" style="animation: fadeIn 0.6s ease-out both;">
+      BLOG
     </a>
 
-    <div class="hidden md:block w-48"><SearchBox /></div>
+    <div class="hidden md:block w-48" style="animation: fadeIn 0.6s 0.15s ease-out both;"><SearchBox /></div>
 
     <!-- 桌面端导航 -->
     <ul class="hidden md:flex items-center gap-6">
-      {navItems.map(item => (
-        <li>
+      {navItems.map((item, i) => (
+        <li style={`animation: fadeIn 0.5s ${0.2 + i * 0.08}s ease-out both;`}>
           <a
             href={item.href}
-            class="text-sm text-warm-600 dark:text-warm-400 hover:text-warm-800 dark:hover:text-warm-200 transition-colors"
+            class="relative text-sm text-warm-600 dark:text-warm-400 hover:text-warm-800 dark:hover:text-warm-200 px-3 py-1.5 rounded-lg hover:bg-warm-200/60 dark:hover:bg-warm-700/60 transition-all duration-200"
           >
             {item.label}
           </a>
         </li>
       ))}
-      <li><ThemeToggle /></li>
+      <li style="animation: fadeIn 0.5s 0.7s ease-out both;"><ThemeToggle /></li>
     </ul>
 
     <!-- 移动端菜单按钮 -->
-    <button id="mobile-menu-btn" type="button" aria-label="菜单" class="md:hidden p-2">
-      <svg class="w-6 h-6 text-warm-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <button id="mobile-menu-btn" type="button" aria-label="菜单" class="md:hidden p-2 relative z-20">
+      <!-- 汉堡图标 -->
+      <svg id="hamburger-icon" class="w-6 h-6 text-warm-600 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <!-- 关闭图标 -->
+      <svg id="close-icon" class="w-6 h-6 text-warm-600 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
   </nav>
 
   <!-- 移动端下拉菜单 -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-900">
-    <ul class="flex flex-col px-4 py-3 gap-3">
-      {navItems.map(item => (
-        <li>
-          <a href={item.href} class="block text-sm text-warm-600 dark:text-warm-400 py-1">
-            {item.label}
-          </a>
-        </li>
-      ))}
-      <li class="pt-2 border-t border-warm-200 dark:border-warm-700"><ThemeToggle /></li>
-    </ul>
+  <div id="mobile-menu" class="md:hidden overflow-hidden transition-all duration-300 ease-out max-h-0 opacity-0 border-t border-transparent">
+    <div class="border-t border-warm-200 dark:border-warm-700 bg-warm-50 dark:bg-warm-800">
+      <ul class="flex flex-col px-4 py-3 gap-3">
+        {navItems.map((item, i) => (
+          <li style={`animation-delay: ${i * 0.05}s`} class="mobile-nav-item">
+            <a href={item.href} class="block text-sm text-warm-600 dark:text-warm-400 py-1.5 px-3 rounded-lg hover:bg-warm-200/60 dark:hover:bg-warm-700/60 hover:text-warm-800 dark:hover:text-warm-200 transition-all duration-200">
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li class="pt-2 border-t border-warm-200 dark:border-warm-700 mobile-nav-item" style="animation-delay: 0.35s"><ThemeToggle /></li>
+      </ul>
+    </div>
   </div>
 </header>
 
 <script>
-  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const hamburger = document.getElementById('hamburger-icon');
+  const close = document.getElementById('close-icon');
+  const items = menu?.querySelectorAll('.mobile-nav-item');
+  let isOpen = false;
+
+  btn?.addEventListener('click', () => {
+    isOpen = !isOpen;
+
+    if (isOpen) {
+      menu.classList.remove('max-h-0', 'opacity-0', 'border-transparent');
+      menu.classList.add('max-h-96', 'opacity-100', 'border-warm-200', 'dark:border-warm-700');
+      hamburger.classList.add('hidden');
+      close.classList.remove('hidden');
+      items?.forEach((item) => {
+        item.classList.add('animate-mobile-item-in');
+      });
+    } else {
+      menu.classList.add('max-h-0', 'opacity-0', 'border-transparent');
+      menu.classList.remove('max-h-96', 'opacity-100', 'border-warm-200', 'dark:border-warm-700');
+      hamburger.classList.remove('hidden');
+      close.classList.add('hidden');
+      items?.forEach(item => {
+        item.classList.remove('animate-mobile-item-in');
+      });
+    }
   });
 </script>
+
+<style is:global>
+  @keyframes navSlideDown {
+    0%   { opacity: 0; transform: translateY(-16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .animate-nav-slide {
+    animation: navSlideDown 0.5s ease-out both;
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes mobileItemIn {
+    0%   { transform: translateY(16px); }
+    100% { transform: translateY(0); }
+  }
+  .animate-mobile-item-in {
+    animation: mobileItemIn 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+</style>

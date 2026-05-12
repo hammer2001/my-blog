@@ -5,26 +5,43 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="关于" description="关于我和这个网站">
   <section class="max-w-3xl mx-auto px-4 py-12">
-    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-8">关于</h1>
-
-    <div class="flex flex-col sm:flex-row gap-8 items-start">
-      <!-- 头像占位 -->
-      <div class="w-32 h-32 rounded-full bg-warm-200 dark:bg-warm-700 flex items-center justify-center text-4xl shrink-0">
-        👤
+    <!-- 头部：头像 + 名字 -->
+    <div class="text-center mb-12">
+      <div class="w-28 h-28 mx-auto mb-5 rounded-full overflow-hidden shadow-md border-2 border-warm-200 dark:border-warm-600">
+        <img src="/avatar.jpg" alt="头像" class="w-full h-full object-cover" />
       </div>
+      <h1 class="text-2xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-1">
+        王大锤
+      </h1>
+      <p class="text-warm-500 dark:text-warm-400 text-base mb-2 font-[family-name:var(--font-serif)]">HAMMER WANG</p>
+      <p class="text-warm-500 dark:text-warm-400 text-sm">你好，欢迎来到我的个人网站</p>
+    </div>
 
+    <!-- 关于我 -->
+    <div class="rounded-xl bg-warm-50 dark:bg-warm-850 border border-warm-200 dark:border-warm-700 p-8 mb-6 text-center">
+      <h2 class="text-lg font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-4">
+        关于我
+      </h2>
       <div class="space-y-4 text-warm-700 dark:text-warm-300 leading-relaxed">
-        <p>你好，欢迎来到我的个人网站。</p>
-        <p>这里记录我的思考、学习和生活。喜欢阅读、编程和探索新事物。</p>
+        <p>喜欢想，喜欢看，也在尝试喜欢说</p>
+        <p>这里记录我的一些想说的、想做的</p>
+        <p>大家一起成长</p>
+      </div>
+    </div>
 
-        <div class="pt-4 space-y-2">
-          <h3 class="font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-200">联系方式</h3>
-          <p>
-            📧 <a href="mailto:your-email@example.com" class="text-warm-600 dark:text-warm-400 hover:underline">your-email@example.com</a>
-          </p>
-          <p>
-            💻 <a href="https://github.com/your-username" target="_blank" class="text-warm-600 dark:text-warm-400 hover:underline">GitHub</a>
-          </p>
+    <!-- 联系方式 -->
+    <div class="rounded-xl bg-warm-50 dark:bg-warm-850 border border-warm-200 dark:border-warm-700 p-8 text-center">
+      <h2 class="text-lg font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-4">
+        联系方式
+      </h2>
+      <div class="space-y-3 flex flex-col items-center">
+        <a href="mailto:yhwang1006@outlook.com" class="flex items-center gap-3 text-warm-700 dark:text-warm-300 hover:text-warm-600 dark:hover:text-warm-200 transition-colors">
+          <span class="w-9 h-9 rounded-lg bg-warm-100 dark:bg-warm-700 flex items-center justify-center text-lg shrink-0">📧</span>
+          <span>yhwang1006@outlook.com</span>
+        </a>
+        <div class="flex items-center gap-3 text-warm-700 dark:text-warm-300">
+          <span class="w-9 h-9 rounded-lg bg-warm-100 dark:bg-warm-700 flex items-center justify-center text-lg shrink-0">📱</span>
+          <span>18858413756</span>
         </div>
       </div>
     </div>

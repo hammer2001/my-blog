@@ -1,6 +1,6 @@
 ---
 title: "Markdown 写作示例"
-date: 2026-05-08
+date: 2026-05-12
 categories: ["技术"]
 tags: ["Markdown", "教程"]
 summary: "这篇示例展示了 Markdown 的各种写作格式，包括标题、图片、代码块、视频嵌入和链接。"

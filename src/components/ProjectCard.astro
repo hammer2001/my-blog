@@ -10,7 +10,7 @@ const { project } = Astro.props;
 const { name, description, tags, url, image } = project.data;
 ---
 
-<div class="group rounded-xl bg-white dark:bg-warm-800 border border-warm-200 dark:border-warm-700 overflow-hidden hover:shadow-md transition-all">
+<div class="group rounded-xl bg-warm-50 dark:bg-warm-850 border border-warm-200 dark:border-warm-700 overflow-hidden hover:shadow-md transition-all">
   {image ? (
     <div class="aspect-[16/9] overflow-hidden">
       <img src={image} alt={name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
