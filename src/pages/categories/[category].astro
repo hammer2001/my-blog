@@ -7,28 +7,29 @@ import PostCard from '../../components/PostCard.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   const cats = new Set<string>();
-  for (const post of posts) {
-    for (const cat of post.data.categories) cats.add(cat);
-  }
-  return [...cats].map(cat => ({ params: { category: cat } }));
+  for (const p of posts) for (const c of p.data.categories) cats.add(c);
+  return [...cats].map(cat => ({ params: { category: cat }, props: { category: cat } }));
 }
 
-const { category } = Astro.params;
-const allPosts = await getCollection('posts');
-const posts = allPosts
-  .filter(p => p.data.categories.includes(category!))
+const { category } = Astro.props;
+const allPosts = (await getCollection('posts'))
+  .filter(p => p.data.categories.includes(category))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout title={`分类：${category}`} description={`浏览 ${category} 分类下的所有文章`}>
+<BaseLayout title={`分类：${category}`} description={`${category} 分类下的所有文章`}>
   <section class="max-w-5xl mx-auto px-4 py-12">
-    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-2">
-      分类：{category}
-    </h1>
-    <p class="text-warm-500 mb-8">{posts.length} 篇文章</p>
+    <h1 class="text-3xl font-bold font-[family-name:var(--font-serif)] text-warm-800 dark:text-warm-100 mb-2">{category}</h1>
+    <p class="text-warm-500 dark:text-warm-400 mb-8 font-[family-name:var(--font-body)]">共 {allPosts.length} 篇文章</p>
 
-    <div class="grid gap-8 md:grid-cols-2">
-      {posts.map(post => <PostCard post={post} />)}
-    </div>
+    {allPosts.length === 0 ? (
+      <p class="text-center text-warm-500 py-20">该分类下还没有文章。</p>
+    ) : (
+      <div class="grid gap-8 md:grid-cols-2">
+        {allPosts.map(post => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    )}
   </section>
 </BaseLayout>

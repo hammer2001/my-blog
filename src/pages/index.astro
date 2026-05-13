@@ -5,22 +5,130 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Banner from '../components/Banner.astro';
 import PostCard from '../components/PostCard.astro';
 
-const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const visiblePosts = allPosts.slice(0, 4);
+const hiddenPosts = allPosts.slice(4);
+const hasMore = hiddenPosts.length > 0;
 ---
 
 <BaseLayout title="首页" description="个人网站 — 思考 · 记录 · 分享">
   <Banner />
   <section class="max-w-5xl mx-auto px-4 py-12">
-    {posts.length === 0 ? (
+    {allPosts.length === 0 ? (
       <p class="text-center text-warm-500 py-20">还没有文章，开始写第一篇吧。</p>
     ) : (
-      <div class="grid gap-8 md:grid-cols-2">
-        {posts.map((post, i) => (
-          <div class="animate-card-in" style={`animation-delay: ${i * 0.1}s`}>
-            <PostCard post={post} />
-          </div>
-        ))}
-      </div>
+      <>
+        <!-- 前4篇可见文章 -->
+        <div class="grid gap-8 md:grid-cols-2">
+          {visiblePosts.map((post, i) => (
+            <div class="animate-card-in" style={`animation-delay: ${i * 0.1}s`}>
+              <PostCard post={post} />
+            </div>
+          ))}
+        </div>
+
+        {hasMore && (
+          <>
+            <!-- 隐藏文章区域 -->
+            <div id="hidden-posts-wrap" class="overflow-hidden" style="max-height: 0; opacity: 0; transition: max-height 0.6s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.5s ease;">
+              <div class="grid gap-8 md:grid-cols-2 mt-8" id="hidden-posts-grid">
+                {hiddenPosts.map((post, i) => (
+                  <div class="animate-card-in" style={`animation-delay: ${i * 0.08}s`}>
+                    <PostCard post={post} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- 控制区域 -->
+            <div id="toggle-area" class="mt-8">
+              <!-- 收起状态：卡片叠层 + 3个向下箭头 -->
+              <div id="expand-ui">
+                <button id="expand-btn" class="flex flex-col mx-auto cursor-pointer group" aria-label="展开">
+                  <svg class="w-3.5 h-2.5 text-warm-400 dark:text-warm-500 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors arrow-down" fill="none" viewBox="4 10 16 8" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <svg class="w-3.5 h-2.5 text-warm-400 dark:text-warm-500 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors arrow-down" fill="none" viewBox="4 10 16 8" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <svg class="w-3.5 h-2.5 text-warm-400 dark:text-warm-500 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors arrow-down" fill="none" viewBox="4 10 16 8" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+
+              <div id="collapse-ui" style="display:none;">
+                <button id="collapse-btn" class="flex flex-col mx-auto cursor-pointer group" aria-label="收起">
+                  <svg class="w-3.5 h-2.5 text-warm-400 dark:text-warm-500 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors" fill="none" viewBox="4 6 16 8" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg class="w-3.5 h-2.5 text-warm-400 dark:text-warm-500 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors" fill="none" viewBox="4 6 16 8" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg class="w-3.5 h-2.5 text-warm-400 dark:text-warm-500 group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors" fill="none" viewBox="4 6 16 8" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </>
     )}
   </section>
 </BaseLayout>
+
+<script>
+  function initTogglePosts() {
+    const wrap = document.getElementById('hidden-posts-wrap');
+    const expandUI = document.getElementById('expand-ui');
+    const collapseUI = document.getElementById('collapse-ui');
+    const expandBtn = document.getElementById('expand-btn');
+    const collapseBtn = document.getElementById('collapse-btn');
+    if (!wrap || !expandUI || !collapseUI || !expandBtn || !collapseBtn) return;
+
+    let fullHeight = 0;
+
+    function measure() {
+      const prev = wrap.style.maxHeight;
+      wrap.style.transition = 'none';
+      wrap.style.maxHeight = 'none';
+      wrap.style.opacity = '1';
+      fullHeight = wrap.scrollHeight;
+      wrap.style.maxHeight = prev;
+      wrap.style.opacity = '0';
+      wrap.offsetHeight;
+      wrap.style.transition = 'max-height 0.6s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.5s ease';
+    }
+
+    expandBtn.addEventListener('click', () => {
+      if (!fullHeight) measure();
+      wrap.style.maxHeight = fullHeight + 'px';
+      wrap.style.opacity = '1';
+      expandUI.style.display = 'none';
+      collapseUI.style.display = 'block';
+    });
+
+    collapseBtn.addEventListener('click', () => {
+      wrap.style.maxHeight = '0';
+      wrap.style.opacity = '0';
+      collapseUI.style.display = 'none';
+      expandUI.style.display = 'block';
+    });
+  }
+
+  initTogglePosts();
+</script>
+
+<style>
+  .arrow-down {
+    animation: bounceDown 2s ease-in-out infinite;
+  }
+  .arrow-down:nth-child(2) { animation-delay: 0.15s; }
+  .arrow-down:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+</style>

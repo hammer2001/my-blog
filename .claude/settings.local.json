@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(python resize_img.py)",
+      "Bash(git checkout *)",
+      "Bash(openssl dgst *)",
+      "Bash(awk '{print $2}')"
+    ]
+  }
+}
