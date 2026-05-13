@@ -7,6 +7,7 @@ import TOC from '../../components/TOC.astro';
 import Comments from '../../components/Comments.astro';
 import FontSizeToggle from '../../components/FontSizeToggle.astro';
 import ImageLightbox from '../../components/ImageLightbox.astro';
+import PasswordGate from '../../components/PasswordGate.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -21,6 +22,7 @@ const { Content, headings } = await render(post);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.summary || post.data.title}>
+  {post.data.categories.includes('手记') && <PasswordGate />}
   <article class="max-w-5xl mx-auto px-4 py-12">
     <div class="flex gap-8">
       <div class="min-w-0 flex-1 max-w-3xl mx-auto">
