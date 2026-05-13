@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostHeader from '../../components/PostHeader.astro';
 import TOC from '../../components/TOC.astro';
 import Comments from '../../components/Comments.astro';
+import FontSizeToggle from '../../components/FontSizeToggle.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -23,6 +24,9 @@ const { Content, headings } = await render(post);
     <div class="flex gap-8">
       <div class="min-w-0 flex-1 max-w-3xl mx-auto">
         <PostHeader post={post} />
+        <div class="flex justify-end mb-2">
+          <FontSizeToggle />
+        </div>
         <div class="prose">
           <Content />
         </div>

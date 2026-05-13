@@ -263,6 +263,15 @@ body {
   @apply bg-warm-600 text-warm-100;
 }
 
+/* 字体大小切换 */
+.font-sm .prose {
+  font-size: 0.8rem;
+}
+.font-sm .prose h1 { font-size: 1.6rem; }
+.font-sm .prose h2 { font-size: 1.25rem; }
+.font-sm .prose h3 { font-size: 1.05rem; }
+.font-sm .prose h4 { font-size: 0.9rem; }
+
 /* 页面渐入动画 */
 @keyframes pageIn {
   0%   { opacity: 0; transform: translateY(16px); }

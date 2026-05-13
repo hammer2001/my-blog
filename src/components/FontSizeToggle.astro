@@ -1,0 +1,47 @@
+---
+// src/components/FontSizeToggle.astro
+---
+
+<button
+  type="button"
+  aria-label="切换字体大小"
+  class="font-size-toggle-btn flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-warm-500 dark:text-warm-400 hover:bg-warm-200 dark:hover:bg-warm-700 transition-colors cursor-pointer"
+>
+  <span class="font-size-label">A</span>
+  <span class="text-[10px]">A</span>
+</button>
+
+<script>
+  function initFontSizeToggle() {
+    const buttons = document.querySelectorAll('.font-size-toggle-btn');
+    if (buttons.length === 0) return;
+
+    const html = document.documentElement;
+    const labels = document.querySelectorAll('.font-size-label');
+
+    const stored = localStorage.getItem('fontSize');
+    if (stored === 'sm') {
+      html.classList.add('font-sm');
+    }
+
+    function updateLabels() {
+      const isSm = html.classList.contains('font-sm');
+      labels.forEach(el => {
+        el.textContent = isSm ? 'A' : 'A';
+        el.style.fontSize = isSm ? '12px' : '14px';
+      });
+    }
+    updateLabels();
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        html.classList.toggle('font-sm');
+        const isSm = html.classList.contains('font-sm');
+        localStorage.setItem('fontSize', isSm ? 'sm' : 'lg');
+        updateLabels();
+      });
+    });
+  }
+
+  initFontSizeToggle();
+</script>
