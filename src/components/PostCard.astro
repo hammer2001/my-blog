@@ -89,6 +89,7 @@ const isLocked = categories.includes('手记');
       updateIcon();
 
       window.addEventListener('handnote-lock-changed', updateIcon);
+      window.addEventListener('pageshow', updateIcon);
 
       btn.addEventListener('click', (e) => {
         e.preventDefault();
