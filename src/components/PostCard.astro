@@ -76,9 +76,18 @@ const isLocked = categories.includes('手记');
       const unlockedIcon = btn.querySelector('.lock-icon-unlocked');
       const UNLOCK_KEY = 'handnote-unlocked';
 
-      // 刷新浏览器 → 清除解锁状态
-      const navType = performance.getEntriesByType('navigation')[0]?.type;
-      if (navType === 'reload') {
+      // 刷新浏览器 → 清除解锁状态（新旧两种 API 兼容）
+      var isReload = false;
+      try {
+        var nav = performance.getEntriesByType('navigation')[0];
+        if (nav && nav.type === 'reload') isReload = true;
+      } catch(e) {}
+      if (!isReload) {
+        try {
+          if (typeof performance.navigation !== 'undefined' && performance.navigation.type === 1) isReload = true;
+        } catch(e) {}
+      }
+      if (isReload) {
         sessionStorage.removeItem(UNLOCK_KEY);
       }
 
@@ -94,24 +103,25 @@ const isLocked = categories.includes('手记');
 
       updateIcon();
 
-      // 监听其他卡片/PasswordGate 触发的状态变化
+      // 监听 PasswordGate 或其他卡片触发的状态变化（同一页面内）
       window.addEventListener('handnote-lock-changed', updateIcon);
 
-      // 从文章页返回（bfcache 恢复）+ 页面可见时重新检查
+      // 从文章页返回时重新检查（覆盖 bfcache / 普通导航 / 标签切换）
       window.addEventListener('pageshow', updateIcon);
-      document.addEventListener('visibilitychange', () => {
+      window.addEventListener('focus', updateIcon);
+      document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible') updateIcon();
       });
 
-      btn.addEventListener('click', (e) => {
-        // 仅在已解锁状态下拦截点击 — 执行上锁
+      btn.addEventListener('click', function(e) {
         if (sessionStorage.getItem(UNLOCK_KEY) === 'true') {
+          // 已解锁 → 上锁
           e.preventDefault();
           e.stopPropagation();
           sessionStorage.removeItem(UNLOCK_KEY);
           window.dispatchEvent(new CustomEvent('handnote-lock-changed'));
         }
-        // 锁定状态下不拦截，事件冒泡到 stretched link 正常跳转
+        // 锁定状态不拦截，冒泡到 stretched link 正常跳转
       });
     })();
   </script>
