@@ -75,19 +75,13 @@ const isLocked = categories.includes('手记');
       const lockedIcon = btn.querySelector('.lock-icon-locked');
       const unlockedIcon = btn.querySelector('.lock-icon-unlocked');
       const UNLOCK_KEY = 'handnote-unlocked';
+      const MARKER_KEY = 'handnote-nav-marker';
+      const currentUrl = location.href;
 
-      // 刷新浏览器 → 清除解锁状态（新旧两种 API 兼容）
-      var isReload = false;
-      try {
-        var nav = performance.getEntriesByType('navigation')[0];
-        if (nav && nav.type === 'reload') isReload = true;
-      } catch(e) {}
-      if (!isReload) {
-        try {
-          if (typeof performance.navigation !== 'undefined' && performance.navigation.type === 1) isReload = true;
-        } catch(e) {}
-      }
-      if (isReload) {
+      // 刷新检测：离开前记录当前URL，加载时比较。相同=刷新→清除解锁
+      var markerUrl = sessionStorage.getItem(MARKER_KEY);
+      sessionStorage.removeItem(MARKER_KEY);
+      if (!markerUrl || markerUrl === currentUrl) {
         sessionStorage.removeItem(UNLOCK_KEY);
       }
 
@@ -103,12 +97,16 @@ const isLocked = categories.includes('手记');
 
       updateIcon();
 
+      // 离开当前页面前记录URL，用于下次加载判断是刷新还是导航
+      window.addEventListener('beforeunload', function() {
+        sessionStorage.setItem(MARKER_KEY, currentUrl);
+      });
+
       // 监听 PasswordGate 或其他卡片触发的状态变化（同一页面内）
       window.addEventListener('handnote-lock-changed', updateIcon);
 
-      // 从文章页返回时重新检查（覆盖 bfcache / 普通导航 / 标签切换）
+      // 从文章页返回时重新检查
       window.addEventListener('pageshow', updateIcon);
-      window.addEventListener('focus', updateIcon);
       document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible') updateIcon();
       });
