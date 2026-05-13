@@ -76,6 +76,12 @@ const isLocked = categories.includes('手记');
       const unlockedIcon = btn.querySelector('.lock-icon-unlocked');
       const UNLOCK_KEY = 'handnote-unlocked';
 
+      // 刷新浏览器 → 清除解锁状态
+      const navType = performance.getEntriesByType('navigation')[0]?.type;
+      if (navType === 'reload') {
+        sessionStorage.removeItem(UNLOCK_KEY);
+      }
+
       function updateIcon() {
         if (sessionStorage.getItem(UNLOCK_KEY) === 'true') {
           lockedIcon.classList.add('hidden');
@@ -91,8 +97,11 @@ const isLocked = categories.includes('手记');
       // 监听其他卡片/PasswordGate 触发的状态变化
       window.addEventListener('handnote-lock-changed', updateIcon);
 
-      // bfcache 恢复时重新检查（从文章页返回首页）
+      // 从文章页返回（bfcache 恢复）+ 页面可见时重新检查
       window.addEventListener('pageshow', updateIcon);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') updateIcon();
+      });
 
       btn.addEventListener('click', (e) => {
         // 仅在已解锁状态下拦截点击 — 执行上锁
