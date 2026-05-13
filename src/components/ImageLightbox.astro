@@ -1,0 +1,52 @@
+<!-- src/components/ImageLightbox.astro: 文章图片点击查看原图 -->
+
+<script>
+  function initImageLightbox() {
+    // 动态创建 lightbox 并挂载到 body，避免 transform/filter 破坏 fixed 定位
+    const lightbox = document.createElement('div');
+    lightbox.id = 'image-lightbox';
+    lightbox.setAttribute('role', 'dialog');
+    lightbox.setAttribute('aria-label', '查看原图');
+    Object.assign(lightbox.style, {
+      position: 'fixed',
+      inset: '0',
+      zIndex: '9999',
+      background: 'rgba(0,0,0,0.8)',
+      display: 'none',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'zoom-out',
+    });
+
+    const img = document.createElement('img');
+    img.id = 'image-lightbox-img';
+    Object.assign(img.style, {
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      borderRadius: '0.75rem',
+      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+    });
+    lightbox.appendChild(img);
+    document.body.appendChild(lightbox);
+
+    function show() { lightbox.style.display = 'flex'; }
+    function hide() { lightbox.style.display = 'none'; }
+
+    // 只给 .prose 内的图片绑定事件
+    document.querySelector('.prose')?.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest?.('img');
+      if (!target) return;
+      e.preventDefault();
+      img.src = target.src;
+      img.alt = target.alt || '';
+      show();
+    });
+
+    lightbox.addEventListener('click', hide);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hide();
+    });
+  }
+
+  initImageLightbox();
+</script>

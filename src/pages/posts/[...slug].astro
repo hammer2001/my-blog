@@ -6,6 +6,7 @@ import PostHeader from '../../components/PostHeader.astro';
 import TOC from '../../components/TOC.astro';
 import Comments from '../../components/Comments.astro';
 import FontSizeToggle from '../../components/FontSizeToggle.astro';
+import ImageLightbox from '../../components/ImageLightbox.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -41,5 +42,6 @@ const { Content, headings } = await render(post);
 
       <TOC headings={headings} />
     </div>
+    <ImageLightbox />
   </article>
 </BaseLayout>
